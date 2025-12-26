@@ -13,7 +13,7 @@ const FEATURES = [
         subtitle: 'Olympian-grade Hammer Strength equipment for serious lifters.',
         description: 'This is where monsters are made. Our weight zone is equipped with the finest Hammer Strength machines, over 10,000lbs of Eleiko calibrated plates, and custom lifting platforms. Whether you are powerlifting, bodybuilding, or simply forging iron, this is your battleground.',
         specs: ['20+ Squat Racks', 'Dumbbells up to 150lbs', 'Deadlift Platforms', 'Chalk Allowed'],
-        image: 'proweightzone.jpg',
+        image: '/proweightzone.jpg',
         icon: Dumbbell
     },
     {
@@ -22,7 +22,7 @@ const FEATURES = [
         subtitle: '1-on-1 coaching.',
         description: 'Stop guessing. Start progressing. Our elite coaches analyze your biomechanics, nutrition, and lifestyle to build a program that guarantees results. This is not just "counting reps"; this is a complete reconstruction of your potential.',
         specs: ['Custom Nutrition Plans', 'Biometric Analysis', '24/7 Support', 'Form Correction'],
-        image: 'dio.jpg',
+        image: '/dio.jpg',
         icon: Users
     },
     {
@@ -31,7 +31,7 @@ const FEATURES = [
         subtitle: 'Advanced treadmills with Netflix integration.',
         description: 'Endurance training without the boredom. Our Cardio Theater features the latest treadmills, stairmasters, and assault runners, all integrated with 4K screens and surround sound. Stream your favorite movies or sync with Zwift while you burn.',
         specs: ['Assault Runners', 'StairMasters', 'Netflix/YouTube Integrated', 'Zone 2 Monitoring'],
-        image: 'carsio.jpg', // Added relevant image for modal background
+        image: '/carsio.jpg', // Added relevant image for modal background
         icon: HeartPulse
     },
     {
@@ -40,7 +40,7 @@ const FEATURES = [
         subtitle: 'Specific coaching for bodybuilding shows.',
         description: 'For those who want to step on stage. We provide full contest prep coaching, including posing practice, peak week protocols, and trunk/bikini selection guidance. We have a track record of turning amateurs into pros.',
         specs: ['Posing Room', 'Peak Week Protocols', 'Tan & Oil Guidance', 'Categories: Bodybuilding, Classic, Bikini'],
-        image: 'gymcom.jpg', // Added relevant image
+        image: '/gymcom.jpg', // Added relevant image
         icon: Trophy
     },
     {
@@ -49,7 +49,7 @@ const FEATURES = [
         subtitle: 'Sauna, Steam, & Cold Plunge',
         description: 'Recovery is the other half of the battle. Accelerate muscle repair and reduce inflammation in our state-of-the-art recovery suite. Alternate between the 90°C sauna and the 3°C cold plunge to shock your system into growth.',
         specs: ['Infrared Sauna', 'Cold Plunge (3°C)', 'Compression Boots', 'Hypervolt Massage'],
-        image: 're.jpg',
+        image: '/re.jpg',
         icon: HeartPulse, // Reusing HeartPulse or generic
         hasAction: true
     }

@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+'use client';
+import React, { useEffect } from 'react';
+import { useState } from "react";
 
 type InventoryItem = {
     id: number;
