@@ -33,53 +33,57 @@ function PaymentContent() {
         // We can keep the timeout for UX, but must await the update
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        const supabase = createClient();
+        try {
+            const supabase = createClient();
 
-        // 1. Get current user to ensure we are authenticated
-        const { data } = await supabase.auth.getUser();
-        const user = data?.user;
+            // 1. Get current user to ensure we are authenticated
+            const { data } = await supabase.auth.getUser();
+            const user = data?.user;
 
-        if (user) {
-            // Get current processing count or default to 0
-            const currentOrders = user.user_metadata.recent_orders_count || 0;
-            const currentPoints = user.user_metadata.loyalty_points || 0;
+            if (user) {
+                // Get current processing count or default to 0
+                const currentOrders = user.user_metadata.recent_orders_count || 0;
+                const currentPoints = user.user_metadata.loyalty_points || 0;
 
-            // 2. Update user metadata
-            // 2. Update user metadata
-            let updateData: any = {
-                status: 'active',
-                recent_orders_count: currentOrders + 1,
-                loyalty_points: currentPoints + 50
-            };
-
-            // If it's a zone purchase, append to 'zones' array in metadata
-            if (searchParams.get('type') === 'zone') {
-                const currentZones = user.user_metadata.zones || [];
-                const newZone = {
-                    id: plan,
-                    name: searchParams.get('name') || plan,
-                    purchaseDate: new Date().toISOString(),
-                    accessId: `ZN-${Math.floor(Math.random() * 10000)}`,
-                    price: price,
-                    validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // Valid 30 days
+                // 2. Update user metadata
+                let updateData: any = {
+                    status: 'active',
+                    recent_orders_count: currentOrders + 1,
+                    loyalty_points: currentPoints + 50
                 };
-                updateData.zones = [...currentZones, newZone];
-            } else {
-                // If it's a membership plan, update the main plan
-                updateData.plan = plan;
-                updateData.subscription_start = new Date().toISOString();
-            }
 
-            const { error } = await supabase.auth.updateUser({
-                data: updateData
-            });
+                // If it's a zone purchase, append to 'zones' array in metadata
+                if (searchParams.get('type') === 'zone') {
+                    const currentZones = user.user_metadata.zones || [];
+                    const newZone = {
+                        id: plan,
+                        name: searchParams.get('name') || plan,
+                        purchaseDate: new Date().toISOString(),
+                        accessId: `ZN-${Math.floor(Math.random() * 10000)}`,
+                        price: price,
+                        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // Valid 30 days
+                    };
+                    updateData.zones = [...currentZones, newZone];
+                } else {
+                    // If it's a membership plan, update the main plan
+                    updateData.plan = plan;
+                    updateData.subscription_start = new Date().toISOString();
+                }
 
-            if (error) {
-                console.error('Error updating user:', error);
-                // Handle error appropriately
-            } else {
-                console.log('Processing payment for:', user.email, plan);
+                const { error } = await supabase.auth.updateUser({
+                    data: updateData
+                });
+
+                if (error) {
+                    console.error('Error updating user:', error);
+                    alert('Error updating profile: ' + error.message);
+                } else {
+                    console.log('Processing payment for:', user.email, plan);
+                }
             }
+        } catch (err: any) {
+            console.error('Payment error:', err);
+            alert('Payment processing failed: ' + (err.message || 'Network error'));
         }
 
         // Redirect to success or dashboard

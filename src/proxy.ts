@@ -11,6 +11,10 @@ export async function proxy(request: NextRequest) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
 
+    if (supabaseUrl.includes('placeholder')) {
+        console.warn('MIDDLEWARE: Supabase URL missing. Redirects might fail.');
+    }
+
     const supabase = createServerClient(
         supabaseUrl,
         supabaseKey,

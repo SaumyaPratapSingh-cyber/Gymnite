@@ -27,40 +27,47 @@ export default function ZonePaymentModal({ isOpen, onClose, zone }: ZonePaymentM
         // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        const supabase = createClient();
-        const { data } = await supabase.auth.getUser();
-        const user = data?.user;
+        try {
+            const supabase = createClient();
+            const { data } = await supabase.auth.getUser();
+            const user = data?.user;
 
-        if (user) {
-            const currentZones = user.user_metadata.zones || [];
+            if (user) {
+                const currentZones = user.user_metadata.zones || [];
 
-            // Generate Zone Data
-            const newZone = {
-                id: zone.id,
-                name: zone.title, // Using title from BentoGrid feature
-                purchaseDate: new Date().toISOString(),
-                accessId: `ZN-${Math.floor(Math.random() * 10000)}`,
-                price: '50', // Fixed price for now or pass from props
-                validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 Days default
-            };
+                // Generate Zone Data
+                const newZone = {
+                    id: zone.id,
+                    name: zone.title, // Using title from BentoGrid feature
+                    purchaseDate: new Date().toISOString(),
+                    accessId: `ZN-${Math.floor(Math.random() * 10000)}`,
+                    price: '50', // Fixed price for now or pass from props
+                    validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 Days default
+                };
 
-            const { error } = await supabase.auth.updateUser({
-                data: {
-                    zones: [...currentZones, newZone],
-                    recent_orders_count: (user.user_metadata.recent_orders_count || 0) + 1,
-                    loyalty_points: (user.user_metadata.loyalty_points || 0) + 50
+                const { error } = await supabase.auth.updateUser({
+                    data: {
+                        zones: [...currentZones, newZone],
+                        recent_orders_count: (user.user_metadata.recent_orders_count || 0) + 1,
+                        loyalty_points: (user.user_metadata.loyalty_points || 0) + 50
+                    }
+                });
+
+                if (!error) {
+                    setSuccess(true);
+                    setTimeout(() => {
+                        setSuccess(false);
+                        onClose();
+                        // Optional: Navigate to dashboard or show notification
+                        window.location.href = '/dashboard';
+                    }, 2000);
+                } else {
+                    alert('Error updating access: ' + error.message);
                 }
-            });
-
-            if (!error) {
-                setSuccess(true);
-                setTimeout(() => {
-                    setSuccess(false);
-                    onClose();
-                    // Optional: Navigate to dashboard or show notification
-                    window.location.href = '/dashboard';
-                }, 2000);
             }
+        } catch (err: any) {
+            console.error('Zone payment error:', err);
+            alert('Payment failed: ' + (err.message || 'Network error'));
         }
         setLoading(false);
     };

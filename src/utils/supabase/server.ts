@@ -7,6 +7,10 @@ export async function createClient() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder'
 
+    if (supabaseUrl.includes('placeholder')) {
+        console.error('SERVER: Supabase environment variables are missing! Check Vercel settings.');
+    }
+
     return createServerClient(
         supabaseUrl,
         supabaseKey,
