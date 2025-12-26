@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Oswald, Inter } from "next/font/google";
 import "./globals.css";
+import { CartProvider } from "@/context/CartContext";
+import CustomCursor from "@/components/ui/CustomCursor";
+import CartDrawer from "@/components/CartDrawer";
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -29,7 +32,11 @@ export default function RootLayout({
       <body
         className={`${oswald.variable} ${inter.variable} antialiased bg-primary text-white font-body selection:bg-accent selection:text-white`}
       >
-        {children}
+        <CartProvider>
+          <CustomCursor />
+          <CartDrawer />
+          {children}
+        </CartProvider>
       </body>
     </html>
   );

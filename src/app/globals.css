@@ -4,8 +4,11 @@
   --color-primary: #050505;
   --color-secondary: #0f0f0f;
   --color-card: #161616;
-  --color-accent: #FF3333;
-  /* Neon Red */
+  --color-accent: #FF4500;
+  /* Hyper-Neon Orange */
+  --color-neon-orange: #FF4500;
+  --color-volt-green: #CCFF00;
+
   --font-heading: var(--font-oswald), sans-serif;
   --font-body: var(--font-inter), sans-serif;
 
@@ -16,9 +19,11 @@
   --primary: #050505;
   --secondary: #0f0f0f;
   --card: #161616;
-  --accent: #FF3333;
+  --accent: #FF4500;
+  --volt-green: #CCFF00;
   --text-main: #ffffff;
-  --text-muted: #888888;
+  --text-muted: #d1d5db;
+  /* text-gray-300 */
   --font-heading: var(--font-oswald), sans-serif;
   --font-body: var(--font-inter), sans-serif;
 }
@@ -44,7 +49,8 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 50;
-    opacity: 0.4;
+    opacity: 0.03;
+    /* Subtler grain */
   }
 
   h1,
@@ -54,7 +60,8 @@
   h5,
   h6 {
     font-family: var(--font-heading);
-    letter-spacing: 0.02em;
+    letter-spacing: -0.02em;
+    /* Tighter tracking for headings */
     text-transform: uppercase;
   }
 }
@@ -66,34 +73,27 @@
 
   /* Glassmorphism Card Utility */
   .glass-card {
-    @apply bg-white/[0.03] border border-white/[0.05] backdrop-blur-xl;
+    @apply backdrop-blur-2xl bg-black/40 border border-white/5;
   }
 
+  /* Steel Border Gradient */
+  .steel-border {
+    @apply border-transparent bg-clip-border;
+    background-image: linear-gradient(#050505, #050505), linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+  }
+
+  /* Kinetic Typography Helper */
+  .kinetic-text {
+    @apply font-black uppercase tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500;
+  }
+
+  /* Old button styles can remain for backward compatibility if needed, 
+     but we will be introducing new Magnetic Buttons */
   .btn-primary {
     @apply relative overflow-hidden bg-[var(--accent)] text-white font-bold py-4 px-10 uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] text-sm md:text-base isolate;
     clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
-  }
-
-  /* Button Shine Effect */
-  .btn-primary::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to right,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent);
-    transform: skewX(-20deg);
-    transition: left 0.5s;
-    z-index: -1;
-  }
-
-  .btn-primary:hover::after {
-    left: 150%;
-    transition: left 0.7s;
   }
 
   .btn-outline {

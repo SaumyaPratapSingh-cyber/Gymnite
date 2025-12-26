@@ -6,19 +6,37 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, Loader2, Smartphone } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+import { createClient } from '@/utils/supabase/client';
+
 export default function LoginPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [form, setForm] = useState({ identifier: '', password: '' });
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
+        setError(null);
+
+        const supabase = createClient();
+
+        // Check if identifier is email or phone (basic check)
+        // For now, Supabase mainly supports email/password or phone/password.
+        // We will assume email for this implementation as phone setup requires more config.
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: form.identifier, // User must enter email. If we implement phone, we need logic.
+            password: form.password,
+        });
+
+        if (signInError) {
+            setError(signInError.message);
             setLoading(false);
-            router.push('/dashboard');
-        }, 2000);
+            return;
+        }
+
+        router.push('/dashboard');
+        router.refresh(); // Refresh to update middleware/server components
     };
 
     return (
@@ -49,6 +67,12 @@ export default function LoginPage() {
                         Welcome back, Athlete.
                     </motion.p>
                 </div>
+
+                {error && (
+                    <div className="bg-red-500/20 border border-red-500/50 text-red-200 text-sm p-3 mb-4 rounded text-center">
+                        {error}
+                    </div>
+                )}
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <motion.div

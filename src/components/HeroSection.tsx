@@ -1,75 +1,107 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, Variants } from 'framer-motion';
+import MagneticButton from './ui/MagneticButton';
 
 const HeroSection = () => {
+    const containerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    });
+
+    const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+    const containerVariants: Variants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2
+            }
+        }
+    };
+
+    const itemVariants: Variants = {
+        hidden: { y: "100%", opacity: 0 },
+        visible: {
+            y: "0%",
+            opacity: 1,
+            transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 20
+            }
+        }
+    };
+
     return (
-        <section className="relative w-full h-[90vh] md:h-screen flex items-center bg-primary overflow-hidden">
-            {/* Background & Overlay */}
-            <div className="absolute inset-0 z-0">
+        <section ref={containerRef} className="relative w-full h-[90vh] md:h-screen flex items-center bg-primary overflow-hidden">
+            {/* Background & Overlay with Parallax */}
+            <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
                 <div className="absolute inset-0 bg-black/60 z-10"></div>
+                {/* Keeping existing asset as requested, wrapped in motion */}
                 <img
                     src="https://images.unsplash.com/photo-1548690312-e3b507d8c110?q=80&w=1974&auto=format&fit=crop"
                     alt="Gym Background"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover scale-110" // Slight scale to avoid gaps during parallax
                 />
-            </div>
+            </motion.div>
 
-            {/* Big Outline Text - Perfectly Centered & Aligned */}
-            <div className="absolute inset-0 flex items-center justify-center z-1 pointer-events-none select-none opacity-20">
-                <h1 className="text-[12vw] md:text-[18vw] font-heading font-bold text-transparent border-white stroke-white" style={{ WebkitTextStroke: '2px rgba(255,255,255,0.1)' }}>
-                    GYMNITE
-                </h1>
-            </div>
-
-            {/* Content Container - Left Aligned with Padding */}
-            <div className="relative z-20 container mx-auto px-4 md:px-12 flex flex-col justify-center h-full">
+            {/* Content Container */}
+            <div className="relative z-20 container-custom flex flex-col justify-center h-full">
                 <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="max-w-3xl"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="max-w-4xl"
                 >
-                    {/* Paint Stroke Accent */}
-                    <div className="relative inline-block mb-4 pl-2">
-                        <div className="absolute inset-0 bg-accent skew-x-[-12deg] opacity-90 h-full w-[110%] -left-2 top-0 -z-10 shadow-glow" />
-                        <span className="relative text-white font-bold tracking-[0.3em] text-sm md:text-lg uppercase">
-                            FIND YOUR POWER
-                        </span>
+                    {/* Small Label */}
+                    <div className="overflow-hidden mb-4">
+                        <motion.div variants={itemVariants} className="flex items-center gap-4">
+                            <span className="h-[1px] w-12 bg-accent"></span>
+                            <span className="text-accent font-bold tracking-[0.3em] text-sm md:text-lg uppercase">
+                                Find Your Power
+                            </span>
+                        </motion.div>
                     </div>
 
-                    <h2 className="text-5xl md:text-8xl font-heading font-bold text-white leading-[0.9] uppercase italic mb-8 drop-shadow-lg">
-                        UNLEASH <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-500">
-                            YOUR BEAST
-                        </span>
-                    </h2>
+                    {/* Kinetic Typography Headline */}
+                    <h1 className="font-heading font-black leading-[0.8] uppercase mb-8">
+                        <div className="overflow-hidden">
+                            <motion.div variants={itemVariants} className="text-7xl md:text-9xl text-white">
+                                Unleash
+                            </motion.div>
+                        </div>
+                        <div className="overflow-hidden">
+                            <motion.div variants={itemVariants} className="text-7xl md:text-9xl kinetic-text">
+                                Your Beast
+                            </motion.div>
+                        </div>
+                    </h1>
 
-                    <div className="flex flex-wrap gap-6">
+                    {/* Buttons Placeholder - Will be refactored to Magnetic later, standard for now but with spring */}
+                    <motion.div variants={itemVariants} className="flex flex-wrap gap-6 pt-8">
+                        <MagneticButton>
+                            Start Training
+                        </MagneticButton>
+
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="bg-accent text-white px-10 py-4 text-lg font-heading font-bold uppercase tracking-wider skew-x-[-10deg] hover:bg-red-600 transition-colors shadow-[0_0_20px_rgba(255,0,0,0.4)]"
+                            className="btn-outline"
                         >
-                            <div className="skew-x-[10deg]">Start Training</div>
+                            About Us
                         </motion.button>
-
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="bg-transparent border-2 border-white text-white px-10 py-4 text-lg font-heading font-bold uppercase tracking-wider skew-x-[-10deg] hover:bg-white hover:text-black transition-colors"
-                        >
-                            <div className="skew-x-[10deg]">About Us</div>
-                        </motion.button>
-                    </div>
+                    </motion.div>
                 </motion.div>
             </div>
 
-            {/* Decorative Vector Side Element */}
-            <div className="absolute right-0 bottom-0 w-1/3 h-full hidden lg:block z-10">
-                <div className="w-full h-full bg-accent/10 clip-path-polygon-[40%_0,100%_0,100%_100%,0%_100%]" />
-            </div>
+            {/* Decorative Grid/Lines */}
+            <div className="absolute inset-0 z-10 pointer-events-none opacity-20 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px]"></div>
         </section>
     );
 };

@@ -3,98 +3,148 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ProductCard from '@/components/shop/ProductCard';
+import ProductCard from '@/components/ProductCard'; // Use the superior component
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
-import { SlidersHorizontal, Search } from 'lucide-react';
+import { SlidersHorizontal, Search, ShoppingBag } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '@/context/CartContext';
 
-const CATEGORIES = ['All', 'Apparel', 'Supplements', 'Gear', 'Accessories'];
+const CATEGORIES = ['All', 'Apparel', 'Supplements', 'Gear'];
 
-const PRODUCTS = [
-    { id: 1, name: 'Oversized Pump Cover', price: 45, category: 'Apparel', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop', isNew: true },
-    { id: 2, name: 'Pre-Workout Ignite', price: 39, category: 'Supplements', image: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?q=80&w=1000&auto=format&fit=crop' },
-    { id: 3, name: 'Pro Lifting Straps', price: 25, category: 'Gear', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop' },
-    { id: 4, name: 'Whey Isolate Gold', price: 89, category: 'Supplements', image: 'https://images.unsplash.com/photo-1579722820308-d74e571900a9?q=80&w=1000&auto=format&fit=crop' },
-    { id: 5, name: 'Compression Tee', price: 35, category: 'Apparel', image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1000&auto=format&fit=crop' },
-    { id: 6, name: 'Gymnite Shaker', price: 15, category: 'Accessories', image: 'https://images.unsplash.com/photo-1590403164319-780c65511dc4?q=80&w=1000&auto=format&fit=crop' },
-    { id: 7, name: 'Weightlifting Belt', price: 55, category: 'Gear', image: 'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1000&auto=format&fit=crop' },
-    { id: 8, name: 'Creatine Monohydrate', price: 29, category: 'Supplements', image: 'https://images.unsplash.com/photo-1627483298606-1293872f1acd?q=80&w=1000&auto=format&fit=crop' },
-    { id: 9, name: 'Elite Gym Bag', price: 65, category: 'Accessories', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=1000&auto=format&fit=crop' },
-];
+import { PRODUCTS } from '@/data/products';
 
 export default function Shop() {
     const [activeCategory, setActiveCategory] = useState('All');
+    const { addToCart } = useCart();
 
     const filteredProducts = activeCategory === 'All'
         ? PRODUCTS
         : PRODUCTS.filter(p => p.category === activeCategory);
 
+    // Map legacy data structure to new component props
+    const mapProductToProps = (p: any) => ({
+        id: p.id.toString(),
+        title: p.name,
+        price: p.price,
+        category: p.category,
+        image_url: p.image
+    });
+
     return (
-        <main className="min-h-screen bg-[var(--primary)] text-white">
+        <main className="min-h-screen bg-black text-white relative overflow-x-hidden selection:bg-accent selection:text-white">
             <Navbar />
 
-            {/* SHOP HERO */}
-            <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-black/60 z-10" />
-                <img
-                    src="https://images.unsplash.com/photo-1556817411-31ae72fa3ea0?q=80&w=2070&auto=format&fit=crop"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    alt="Shop Hero"
+            {/* CINEMATIC HERO */}
+            <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-black/40 z-10" />
+                {/* Parallax Background */}
+                <motion.div
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 10, repeat: Infinity, repeatType: "mirror" }}
+                    className="absolute inset-0 z-0 bg-cover bg-center"
+                    style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop")' }}
                 />
 
-                <div className="relative z-20 text-center">
+                {/* Hero Content */}
+                <div className="relative z-20 text-center container-custom">
                     <ScrollReveal>
-                        <h1 className="text-6xl md:text-8xl font-black italic uppercase mb-4">
-                            The <span className="text-[var(--accent)]">Armory</span>
+                        <h1 className="text-7xl md:text-9xl font-black italic uppercase mb-2 tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">
+                            The Armory
                         </h1>
-                        <p className="text-gray-300 tracking-[0.3em] font-bold uppercase text-sm md:text-base">
-                            Official Gymnite Merchandise & Supplements
-                        </p>
+                        <div className="flex items-center justify-center gap-4 mb-4">
+                            <div className="h-[1px] w-20 bg-accent" />
+                            <p className="text-gray-300 tracking-[0.5em] font-bold uppercase text-xs md:text-sm">
+                                Elite Equipment for Elite Athletes
+                            </p>
+                            <div className="h-[1px] w-20 bg-accent" />
+                        </div>
                     </ScrollReveal>
                 </div>
+
+                {/* Gradient Fade to Content */}
+                <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent z-20" />
             </section>
 
-            {/* SHOP CONTENT */}
-            <section className="section-padding container-custom">
-                {/* Filters Bar */}
-                <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-6 sticky top-24 z-30 bg-[var(--primary)]/95 backdrop-blur-md p-4 rounded-2xl border border-white/5 shadow-2xl">
+            {/* SHOP INTERFACE */}
+            <section className="relative z-30 -mt-20 container-custom pb-32">
+                {/* Floating Control Bar */}
+                <div className="glass-card p-4 rounded-full mb-16 flex flex-col md:flex-row justify-between items-center gap-6 sticky top-24 z-50 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/50">
+
+                    {/* Categories */}
                     <div className="flex flex-wrap gap-2 justify-center">
                         {CATEGORIES.map(cat => (
                             <button
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
-                                className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest border transition-all duration-300 ${activeCategory === cat
-                                    ? 'bg-[var(--accent)] border-[var(--accent)] text-white'
-                                    : 'bg-transparent border-white/10 text-gray-400 hover:border-white hover:text-white'
+                                className={`relative px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 overflow-hidden group ${activeCategory === cat
+                                    ? 'text-black'
+                                    : 'text-gray-400 hover:text-white'
                                     }`}
                             >
-                                {cat}
+                                {activeCategory === cat && (
+                                    <motion.div
+                                        layoutId="activeTab"
+                                        className="absolute inset-0 bg-accent"
+                                        initial={false}
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                                <span className="relative z-10">{cat}</span>
                             </button>
                         ))}
                     </div>
 
+                    {/* Search & Filter */}
                     <div className="flex items-center gap-4 w-full md:w-auto">
-                        <div className="relative w-full md:w-64">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+                        <div className="relative w-full md:w-64 group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-hover:text-accent transition-colors" size={16} />
                             <input
                                 type="text"
-                                placeholder="SEARCH GEAR..."
-                                className="w-full bg-[#111] border border-white/10 rounded-full py-2 pl-10 pr-4 text-xs font-bold text-white focus:outline-none focus:border-[var(--accent)]"
+                                placeholder="SEARCH DATA..."
+                                className="w-full bg-white/5 border border-white/10 rounded-full py-2.5 pl-10 pr-4 text-xs font-bold text-white focus:outline-none focus:border-accent focus:bg-white/10 transition-all uppercase tracking-wider"
                             />
                         </div>
-                        <button className="p-2 border border-white/10 rounded-full hover:bg-white hover:text-black transition-colors">
+                        <button className="p-2.5 border border-white/10 rounded-full bg-white/5 hover:bg-white hover:text-black transition-colors">
                             <SlidersHorizontal size={18} />
                         </button>
                     </div>
                 </div>
 
-                {/* Products Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredProducts.map((product, i) => (
-                        <ScrollReveal key={product.id} delay={i * 0.1}>
-                            <ProductCard product={product} />
-                        </ScrollReveal>
-                    ))}
-                </div>
+                {/* Cyber Grid Display */}
+                <motion.div
+                    layout
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                >
+                    <AnimatePresence mode='popLayout'>
+                        {filteredProducts.map((product, i) => (
+                            <motion.div
+                                layout
+                                key={product.id}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.3, delay: i * 0.05 }}
+                            >
+                                <ProductCard
+                                    id={product.id}
+                                    name={product.name}
+                                    price={product.price}
+                                    image={product.image}
+                                    category={product.category}
+                                />
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
+
+                {filteredProducts.length === 0 && (
+                    <div className="py-20 text-center">
+                        <ShoppingBag size={48} className="mx-auto text-gray-700 mb-4" />
+                        <h3 className="text-xl font-bold text-gray-500 uppercase">System Empty</h3>
+                        <p className="text-gray-600">No assets found in this sector.</p>
+                    </div>
+                )}
             </section>
 
             <Footer />

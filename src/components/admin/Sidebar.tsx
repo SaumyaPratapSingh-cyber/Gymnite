@@ -11,9 +11,7 @@ const Sidebar = () => {
 
     const links = [
         { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-        { name: 'Inventory', href: '/inventory', icon: Package },
-        { name: 'Orders', href: '/orders', icon: ShoppingBag },
-        { name: 'Leads', href: '/leads', icon: Users },
+        { name: 'My Orders', href: '/orders', icon: ShoppingBag }, // We can make this a real page or just redirect to dashboard for now
         { name: 'Settings', href: '/settings', icon: Settings },
     ];
 
@@ -21,9 +19,15 @@ const Sidebar = () => {
         <aside className="w-64 bg-secondary border-r border-white/5 flex flex-col h-screen sticky top-0">
             {/* Brand */}
             <div className="p-8 border-b border-white/5">
-                <Link href="/" className="text-2xl font-heading font-bold tracking-tighter text-white italic">
+                <Link href="/dashboard" className="text-2xl font-heading font-bold tracking-tighter text-white italic">
                     GYM<span className="text-accent">NITE</span>
-                    <span className="block text-[10px] text-gray-500 font-body not-italic tracking-widest mt-1">ADMIN PORTAL</span>
+                    <span className="block text-[10px] text-gray-500 font-body not-italic tracking-widest mt-1">MEMBER PORTAL</span>
+                </Link>
+            </div>
+
+            <div className="px-4 pt-4">
+                <Link href="/" className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-white transition-colors uppercase tracking-widest p-2 border border-white/5 hover:border-white/20 rounded">
+                    &larr; Back to Website
                 </Link>
             </div>
 

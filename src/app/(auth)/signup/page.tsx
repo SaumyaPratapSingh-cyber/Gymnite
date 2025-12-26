@@ -4,21 +4,55 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, Loader2, User, Phone, MapPin } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+import { createClient } from '@/utils/supabase/client';
 
 export default function SignupPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', password: '' });
+
+    const searchParams = useSearchParams();
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate API call for now
-        setTimeout(() => {
+        setError(null);
+
+        const supabase = createClient();
+
+        const { error: signUpError } = await supabase.auth.signUp({
+            email: form.email,
+            password: form.password,
+            options: {
+                data: {
+                    full_name: form.name,
+                    phone: form.phone,
+                    address: form.address,
+                }
+            }
+        });
+
+        if (signUpError) {
+            setError(signUpError.message);
             setLoading(false);
-            router.push('/dashboard');
-        }, 2000);
+            return;
+        }
+
+        // Check if user came with a selected plan
+        const plan = searchParams.get('plan');
+        const price = searchParams.get('price');
+        const billing = searchParams.get('billing');
+
+        if (plan) {
+            router.push(`/onboarding/payment?plan=${plan}&price=${price}&billing=${billing}`);
+        } else {
+            router.push('/onboarding/plans');
+        }
+
+        router.refresh();
     };
 
     const inputClasses = "w-full bg-white/5 border-b-2 border-white/10 py-3 pl-10 pr-4 text-white font-medium focus:outline-none focus:border-[var(--accent)] focus:bg-white/10 transition-all placeholder:text-gray-600 placeholder:font-normal";
@@ -44,6 +78,12 @@ export default function SignupPage() {
                     Begin your legacy. No excuses.
                 </motion.p>
             </div>
+
+            {error && (
+                <div className="bg-red-500/20 border border-red-500/50 text-red-200 text-sm p-3 mb-6 rounded text-center">
+                    {error}
+                </div>
+            )}
 
             <form onSubmit={handleSignup} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
