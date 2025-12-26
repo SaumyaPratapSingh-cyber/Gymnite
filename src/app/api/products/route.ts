@@ -1,11 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-// Initialize Supabase Client (Ensure env vars are set)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder';
+function getSupabase() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+    if (!supabaseUrl || !supabaseKey) {
+        throw new Error('Supabase URL or Service Role Key is missing. Check environment variables.');
+    }
+    return createClient(supabaseUrl, supabaseKey);
+}
 
 /**
  * GET /api/products
@@ -13,6 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
  */
 export async function GET(request: Request) {
     try {
+        const supabase = getSupabase();
         const { searchParams } = new URL(request.url);
         const category = searchParams.get('category');
 
@@ -43,6 +48,7 @@ export async function GET(request: Request) {
  */
 export async function POST(request: Request) {
     try {
+        const supabase = getSupabase();
         const body = await request.json();
 
         // Quick validation
