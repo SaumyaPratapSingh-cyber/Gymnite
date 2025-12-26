@@ -8,8 +8,15 @@ export async function proxy(request: NextRequest) {
         },
     })
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    // If keys are missing, we log and return the response without auth checks
+    // to avoid crashing the whole site with a 500 error.
+    if (!supabaseUrl || !supabaseKey) {
+        console.error('MIDDLEWARE ERROR: Supabase environment variables are missing. Please add them in Vercel settings.')
+        return response
+    }
 
     const supabase = createServerClient(
         supabaseUrl,
