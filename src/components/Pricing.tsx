@@ -130,8 +130,8 @@ const Pricing = () => {
     useEffect(() => {
         const checkUser = async () => {
             const supabase = createClient();
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
+            const { data } = await supabase.auth.getUser();
+            setUser(data?.user || null);
         };
         checkUser();
     }, []);

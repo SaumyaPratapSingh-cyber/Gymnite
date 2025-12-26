@@ -28,7 +28,8 @@ export default function ZonePaymentModal({ isOpen, onClose, zone }: ZonePaymentM
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data } = await supabase.auth.getUser();
+        const user = data?.user;
 
         if (user) {
             const currentZones = user.user_metadata.zones || [];

@@ -4,7 +4,8 @@ import ProfileEditor from '@/components/dashboard/ProfileEditor';
 
 export default async function SettingsPage() {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
+    const user = data?.user;
 
     if (!user) {
         return redirect('/login');

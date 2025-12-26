@@ -9,7 +9,8 @@ import ZoneAccess from '@/components/dashboard/ZoneAccess';
 
 export default async function Dashboard() {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
+    const user = data?.user;
 
     if (!user) {
         return redirect('/login');

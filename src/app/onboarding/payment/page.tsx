@@ -36,7 +36,8 @@ function PaymentContent() {
         const supabase = createClient();
 
         // 1. Get current user to ensure we are authenticated
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data } = await supabase.auth.getUser();
+        const user = data?.user;
 
         if (user) {
             // Get current processing count or default to 0

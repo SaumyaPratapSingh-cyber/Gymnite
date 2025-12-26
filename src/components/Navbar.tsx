@@ -30,8 +30,8 @@ const Navbar = () => {
         // Check for user session
         import('@/utils/supabase/client').then(({ createClient }) => {
             const supabase = createClient();
-            supabase.auth.getUser().then(({ data: { user } }) => {
-                setUser(user);
+            supabase.auth.getUser().then(({ data }) => {
+                setUser(data?.user || null);
             });
         });
     }, []);
