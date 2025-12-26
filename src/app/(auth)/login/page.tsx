@@ -13,6 +13,15 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [form, setForm] = useState({ identifier: '', password: '' });
+    const [configError, setConfigError] = useState(false);
+
+    React.useEffect(() => {
+        // Quick check if we are in placeholder mode (only on client)
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        if (!supabaseUrl || supabaseUrl.includes('placeholder')) {
+            setConfigError(true);
+        }
+    }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -74,6 +83,19 @@ export default function LoginPage() {
                         Welcome back, Athlete.
                     </motion.p>
                 </div>
+
+                {configError && (
+                    <div className="bg-orange-500/20 border border-orange-500/50 text-orange-200 text-xs p-4 mb-6 rounded text-left flex flex-col gap-2">
+                        <p className="font-bold underline uppercase">⚠️ Critical Configuration Required</p>
+                        <p>Supabase environment variables are missing from your Vercel project settings.</p>
+                        <ul className="list-disc pl-4 opacity-80">
+                            <li>Check Vercel Dashboard &gt; Settings &gt; Environment Variables</li>
+                            <li>Add <code>NEXT_PUBLIC_SUPABASE_URL</code></li>
+                            <li>Add <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></li>
+                            <li><strong>IMPORTANT:</strong> You must redeploy for changes to take effect.</li>
+                        </ul>
+                    </div>
+                )}
 
                 {error && (
                     <div className="bg-red-500/20 border border-red-500/50 text-red-200 text-sm p-3 mb-4 rounded text-center">
