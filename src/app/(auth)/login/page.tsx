@@ -21,16 +21,23 @@ export default function LoginPage() {
 
         const supabase = createClient();
 
-        // Check if identifier is email or phone (basic check)
-        // For now, Supabase mainly supports email/password or phone/password.
-        // We will assume email for this implementation as phone setup requires more config.
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-            email: form.identifier, // User must enter email. If we implement phone, we need logic.
-            password: form.password,
-        });
+        try {
+            // Check if identifier is email or phone (basic check)
+            // For now, Supabase mainly supports email/password or phone/password.
+            // We will assume email for this implementation as phone setup requires more config.
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+                email: form.identifier, // User must enter email. If we implement phone, we need logic.
+                password: form.password,
+            });
 
-        if (signInError) {
-            setError(signInError.message);
+            if (signInError) {
+                setError(signInError.message);
+                setLoading(false);
+                return;
+            }
+        } catch (err: any) {
+            console.error('Login error:', err);
+            setError(err.message || 'Failed to connect to authentication server. Please check your internet connection.');
             setLoading(false);
             return;
         }

@@ -23,20 +23,27 @@ function SignupForm() {
 
         const supabase = createClient();
 
-        const { error: signUpError } = await supabase.auth.signUp({
-            email: form.email,
-            password: form.password,
-            options: {
-                data: {
-                    full_name: form.name,
-                    phone: form.phone,
-                    address: form.address,
+        try {
+            const { error: signUpError } = await supabase.auth.signUp({
+                email: form.email,
+                password: form.password,
+                options: {
+                    data: {
+                        full_name: form.name,
+                        phone: form.phone,
+                        address: form.address,
+                    }
                 }
-            }
-        });
+            });
 
-        if (signUpError) {
-            setError(signUpError.message);
+            if (signUpError) {
+                setError(signUpError.message);
+                setLoading(false);
+                return;
+            }
+        } catch (err: any) {
+            console.error('Signup error:', err);
+            setError(err.message || 'Failed to connect to authentication server. Please check your internet connection and verify environmental variables.');
             setLoading(false);
             return;
         }

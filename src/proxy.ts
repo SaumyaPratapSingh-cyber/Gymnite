@@ -57,8 +57,13 @@ export async function proxy(request: NextRequest) {
         }
     )
 
-    const { data } = await supabase.auth.getUser()
-    const user = data?.user
+    let user = null;
+    try {
+        const { data } = await supabase.auth.getUser()
+        user = data?.user
+    } catch (e) {
+        console.error('Middleware auth error:', e)
+    }
 
     // Protect Dashboard Route
     if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
