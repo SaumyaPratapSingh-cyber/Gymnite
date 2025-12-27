@@ -41,7 +41,7 @@ export const PRODUCTS: Product[] = [
         name: 'Isolate: Zero Carb',
         price: 89,
         category: 'Supplements',
-        image: 'https://images.unsplash.com/photo-1582719478250-4c5c1c5e5e2f?q=80&w=1974&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?q=80&w=2070&auto=format&fit=crop',
         description: 'Pure protein for pure gains. Zero fillers, zero carbs, 100% anabolic potential. Chocolate Fudge flavor.',
         isNew: false
     },
@@ -59,7 +59,7 @@ export const PRODUCTS: Product[] = [
         name: 'Titan Leather Belt',
         price: 120,
         category: 'Gear',
-        image: 'https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=2070&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2070&auto=format&fit=crop',
         description: 'Protect your spine during PR attempts. 10mm thick genuine leather with a quick-release lever.',
         isNew: false
     },
@@ -68,7 +68,7 @@ export const PRODUCTS: Product[] = [
         name: 'Vapor Shorts',
         price: 40,
         category: 'Apparel',
-        image: 'https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=2070&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1974&auto=format&fit=crop',
         description: 'Lightweight, breathable, and squat-proof. The ideal shorts for high-intensity interval training.',
         isNew: false
     },

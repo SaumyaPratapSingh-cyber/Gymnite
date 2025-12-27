@@ -77,9 +77,9 @@ const ProductCard = ({ id, name, price, image, category }: ProductCardProps) => 
 
                     {/* Floating Add to Cart Button */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 1, y: 0 }}
                         whileHover={{ scale: 1.1 }}
-                        className="absolute bottom-4 right-4 z-30 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0"
+                        className="absolute bottom-4 right-4 z-30 opacity-100 transition-all duration-300 transform"
                     >
                         <button
                             onClick={(e) => {
